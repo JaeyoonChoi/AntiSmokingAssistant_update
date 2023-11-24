@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
 }
 
+//test
+
 android {
     namespace = "com.example.antismokingassistant"
     compileSdk = 34
