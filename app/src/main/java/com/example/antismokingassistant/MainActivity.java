@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean isRecordPermissionGranted = false;
 
 
+    private boolean isCameraPermissionGranted = false;
+    private boolean isWritePermissionGranted = false;
+
+
     //
     private Button btn_shoot;
 
@@ -37,22 +41,31 @@ public class MainActivity extends AppCompatActivity {
 
         //권한
         mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
-            @Override
-            public void onActivityResult(Map<String, Boolean> result) {
+                    @Override
+                    public void onActivityResult(Map<String, Boolean> result) {
 
-                if(result.get(Manifest.permission.READ_EXTERNAL_STORAGE) != null){
-                    isReadPermissionGranted = result.get(Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
+                        if (result.get(Manifest.permission.READ_EXTERNAL_STORAGE) != null) {
+                            isReadPermissionGranted = result.get(Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
 
-                if(result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null){
-                    isReadPermissionGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
-                }
+                        if (result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null) {
+                            isReadPermissionGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                        }
 
-                if(result.get(Manifest.permission.RECORD_AUDIO) != null){
-                    isReadPermissionGranted = result.get(Manifest.permission.RECORD_AUDIO);
-                }
-            }
-        });
+                        if (result.get(Manifest.permission.RECORD_AUDIO) != null) {
+                            isReadPermissionGranted = result.get(Manifest.permission.RECORD_AUDIO);
+                        }
+
+                        //
+                        if (result.get(Manifest.permission.CAMERA) != null) {
+                            isCameraPermissionGranted = result.get(Manifest.permission.CAMERA);
+                        }
+
+                        if (result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) != null) {
+                            isWritePermissionGranted = result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        }
+                    }
+                });
 
 
 
@@ -98,6 +111,18 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED;
 
+
+        isCameraPermissionGranted = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED;
+
+        isWritePermissionGranted = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED;
+
+
         //Step5
         List<String> permissionRequest = new ArrayList<String>();
 
@@ -111,6 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(!isReadPermissionGranted){
             permissionRequest.add(Manifest.permission.RECORD_AUDIO);
+        }
+
+        if(!isReadPermissionGranted){
+            permissionRequest.add(Manifest.permission.CAMERA);
+        }
+
+        if(!isReadPermissionGranted){
+            permissionRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
 
