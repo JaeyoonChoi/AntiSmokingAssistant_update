@@ -104,11 +104,7 @@ public class ShootActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    runOnUiThread(() -> {
-                        TextView tvResult = findViewById(R.id.tv_result);
-                        tvResult.setText("marlboroMedium");
-                        final double Tar = 6, Nicotin = 0.5, Radioactive=0.01;
-                    });
+
                 }
             }).start();
         }
