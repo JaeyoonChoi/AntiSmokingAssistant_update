@@ -52,20 +52,27 @@
             android:layout_height="wrap_content"
             android:text="담배갑 촬영"/>
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="207dp"
+            android:layout_height="wrap_content"
+            android:text="recording"
+            android:onClick="onGotoAudioClassfication"/>
+
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="horizontal">-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:orientation="horizontal">-->
 
-<!--        <Switch-->
-<!--            android:id="@+id/switch1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="음성 녹음 허용" />-->
-<!--    </LinearLayout>-->
+    <!--        <Switch-->
+    <!--            android:id="@+id/switch1"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:text="음성 녹음 허용" />-->
+    <!--    </LinearLayout>-->
 
 
 </LinearLayout>

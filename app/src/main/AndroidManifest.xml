@@ -28,6 +28,8 @@
         android:theme="@style/Theme.AntiSmokingAssistant"
         tools:targetApi="31">
         <activity
+            android:name=".AudioClassificationActivity" />
+        <activity
             android:name=".ShootActivity"
             android:exported="false" />
         <activity
@@ -41,19 +43,19 @@
         </activity>
 
 <!--        Camera save in folder-->
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="com.example.antismokingassistant"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--&lt;!&ndash;&lt;!&ndash;            -파일경로 xml 생성&ndash;&gt;&ndash;&gt;-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.antismokingassistant"
+            android:exported="false"
+            android:grantUriPermissions="true">
+<!--            -파일경로 xml 생성-->
 
 
-<!--        <meta-data-->
-<!--            android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--            android:resource="@xml/file_path"/>-->
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths"/>
 
-<!--        </provider>-->
+        </provider>
 
 
     </application>

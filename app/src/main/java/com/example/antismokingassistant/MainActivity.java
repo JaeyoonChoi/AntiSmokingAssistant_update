@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     //
     private Button btn_shoot;
 
+    public void onGotoAudioClassfication(View view){
+        //start the Image helper activity
+        Intent intent = new Intent(this, AudioClassificationActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

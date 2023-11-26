@@ -13,7 +13,7 @@
     <!--  Environment.getExternalStorageDirectory() 외부 저장소-->
     <external-path
         name="external"
-        path="." />
+        path="com.example.antismokingassistant/files/Pictures" />
 
     <!--  Context.getExternalCacheDir() 외부 저장소-->
     <external-cache-path
