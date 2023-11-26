@@ -17,6 +17,14 @@
         android:name="android.hardware.camera"
         android:required="true"/>
 
+
+<!--    Foreground Service - permission-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -42,6 +50,15 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".MyBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED">
+
+                </action>
+            </intent-filter>
+        </receiver>
+
 <!--        Camera save in folder-->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -57,6 +74,12 @@
 
         </provider>
 
+
+<!--        //ForegroundService-->
+        <service
+            android:name=".MyForegroundService"
+            android:enabled="true"
+            android:exported="true"/>
 
     </application>
 

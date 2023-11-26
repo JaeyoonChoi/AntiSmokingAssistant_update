@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -44,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Foreground
+//        if(!foregroundServiceRunning()) {
+//            Intent serviceIntent = new Intent(this, MyForegroundService.class);
+//            startForegroundService(serviceIntent);
+//        }
+        Intent serviceIntent = new Intent(this, MyForegroundService.class);
+        startForegroundService(serviceIntent);
+
+        foregroundServiceRunning();
 
         //권한
         mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
@@ -98,6 +111,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    //Foreground
+    public boolean foregroundServiceRunning(){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        for(ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)){
+            if(MyForegroundService.class.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     //Step4
     private void requestPermission(){
