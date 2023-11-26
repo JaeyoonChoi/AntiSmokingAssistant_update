@@ -61,7 +61,7 @@ public class AudioClassificationActivity extends AudioHelperActivity {
                 List<Category> finalOutput = new ArrayList<>();
                 for(Classifications classifications : output) {
                     for (Category category : classifications.getCategories()) {
-                        if (category.getScore() > 0.9f && category.getLabel().equals("turbo")) {
+                        if (category.getScore() > 0.97f && category.getLabel().equals("turbo")) {
                             finalOutput.add(category);
                         }
                     }
