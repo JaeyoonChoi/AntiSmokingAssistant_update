@@ -2,9 +2,13 @@ package com.example.antismokingassistant;
 
 import com.example.antismokingassistant.helpers.AudioHelperActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioRecord;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import org.tensorflow.lite.Tensor;
 import org.tensorflow.lite.support.audio.TensorAudio;
@@ -20,6 +24,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AudioClassificationActivity extends AudioHelperActivity {
+    //카운터 변수 추가
+    private int counter = 0;
 
     private String model = "lighter_model2.tflite";
     private AudioRecord audioRecord;
@@ -61,8 +67,75 @@ public class AudioClassificationActivity extends AudioHelperActivity {
                 List<Category> finalOutput = new ArrayList<>();
                 for(Classifications classifications : output) {
                     for (Category category : classifications.getCategories()) {
-                        if (category.getScore() > 0.97f && category.getLabel().equals("turbo")) {
+                        if (category.getScore() >= 1.0f && category.getLabel().equals("turbo")) {
                             finalOutput.add(category);
+
+
+                            if (category.getScore() >= 1.0f) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 시작하려는 앱의 패키지 이름
+                                        String packageName = "com.example.antismokingassistant";
+
+                                        // Intent를 생성하여 앱을 시작
+//                                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+                                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.example.antismokingassistant");
+                                        if (launchIntent != null) {
+                                            // Foreground에서 실행하기 위해 새로운 태스크를 생성
+                                            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(launchIntent);
+                                        } else {
+                                            Toast.makeText(AudioClassificationActivity.this, "No app found to open", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+
+                            //AlertDialog run
+                            // 만약 category.getScore() 값이 1.0f 이상이면, AlertDialog를 실행
+//                            if (category.getScore() >= 1.0f) {
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        AlertDialog.Builder builder = new AlertDialog.Builder(AudioClassificationActivity.this);
+//                                        builder.setMessage("담배피는 중이신가요??")
+//                                                .setCancelable(false)
+//                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                                                    public void onClick(DialogInterface dialog, int id) {
+//                                                        // Yes -> counter 증가
+//                                                        counter++;
+//                                                        Toast.makeText(getApplicationContext(),"담배 핀 횟수: "+ counter,
+//                                                                Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                })
+//                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                                                    public void onClick(DialogInterface dialog, int id) {
+//                                                        //No -> 아무것도 안함
+//                                                        dialog.cancel();
+//                                                        Toast.makeText(getApplicationContext(),"you choose no action for alertbox",
+//                                                                Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                });
+//
+//                                        AlertDialog alert = builder.create();
+//                                        alert.setTitle("AlertDialogExample");
+//                                        alert.show();
+//                                    }
+//                                });
+//                            }
+
+
+
+
+
+
+
+
+
+
+
+
                         }
                     }
                 }

@@ -41,6 +41,7 @@ dependencies {
     implementation("androidx.gridlayout:gridlayout:1.0.0")
     implementation("androidx.exifinterface:exifinterface:1.3.6")
     implementation("org.tensorflow:tensorflow-lite-task-audio:0.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
     //권한 받기
 //    implementation("gun0912.ted:tedpermission:3.3.0")
 //    implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")

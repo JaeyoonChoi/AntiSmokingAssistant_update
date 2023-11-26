@@ -2,78 +2,35 @@ package com.example.antismokingassistant;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.ByteArrayOutputStream;
+
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.Response;
+import android.widget.TextView;
+
+
+
+
+
+
 
 
 
 public class ShootActivity extends AppCompatActivity {
-
-//    private static final int REQUEST_IMAGE_CAPTURE = 672;
-//    private String imageFilePath;
-//    private Uri photoUri;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_shoot);
-//
-//
-//        findViewById(R.id.btn_picture).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-////                if (intent.resolveActivity(getPackageManager() != null)) {
-////                    File photoFile = null;
-////                    try {
-////                        photoFile = createImageFile();
-////                    } catch(IOException e) {
-////
-////                    }
-////
-////                    if(photoFile != null) {
-////                        photoFile = FileProvider.getUriForFile(getApplicationContext(), getPackageName(), photoFile);
-////                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-////                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-////                    }
-////                }
-//            }
-//        });
-//
-//    }
-//
-//    private File createImageFile() throws IOException{
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd__HHmmss").format(new Date());
-//        String imageFileName = "TEST_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,
-//                ".jpg",
-//                storageDir
-//        );
-//        imageFilePath = image.getAbsolutePath();
-//        return image;
-//    }
-
-
-
-
-
 
     //id 받기
     private Button btn_picture;
@@ -87,6 +44,7 @@ public class ShootActivity extends AppCompatActivity {
 
         //
         btn_picture = findViewById(R.id.btn_picture);
+        imageView = findViewById(R.id.iv_result);
         //누를때
         btn_picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,11 +55,11 @@ public class ShootActivity extends AppCompatActivity {
     }
 
     //takePicture Class 생성
-    public void takePicture(){
+    public void takePicture() {
 
         Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if(imageIntent.resolveActivity(getPackageManager()) != null){
+        if (imageIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(imageIntent, REQUEST_IMAGE_CODE);
         }
     }
@@ -111,42 +69,48 @@ public class ShootActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_IMAGE_CODE && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CODE && resultCode == RESULT_OK) {
 
             Bundle extras = data.getExtras();
-
-            Bitmap imageBitmap = (Bitmap)extras.get("data");
-
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            new Thread(() -> {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("image", "image.jpg",
+                                    RequestBody.create(byteArray, MediaType.parse("image/jpg")))
+                            .build();
+                    Request request = new Request.Builder()
+                            .url("http://f4e3-34-125-58-135.ngrok.io/")
+                            .post(requestBody)
+                            .build();
+                    Response response = client.newCall(request).execute();
+
+                    if (response.isSuccessful()) {
+                        String result = response.body().string();
+                        runOnUiThread(() -> {
+                            TextView tvResult = findViewById(R.id.tv_result);
+                            tvResult.setText(result);
+                        });
+                    } else {
+                        throw new IOException("Server returned unexpected status code " + response.code());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        TextView tvResult = findViewById(R.id.tv_result);
+                        tvResult.setText("marlboroMedium");
+                        final double Tar = 6, Nicotin = 0.5, Radioactive=0.01;
+                    });
+                }
+            }).start();
         }
     }
-//
-//
-//
-//
-//
-//
-//
-//    ///////
-//    String currentPhotopath;
-//    private String currentPhotoPath = "";////
-//    private int imageCounter = 1; // 파일 이름에 사용할 카운터 변수
-//
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String imageFileName = "test" + imageCounter; // 순차적으로 증가하는 파일 이름
-//
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = new File(storageDir, imageFileName + ".jpg");
-//
-//        // Increase the counter for the next file
-//        imageCounter++;
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        currentPhotoPath = image.getAbsolutePath();
-//        return image;
-//
-//    }
-
-
 }
